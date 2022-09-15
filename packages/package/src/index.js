@@ -55,7 +55,9 @@ export async function build(config, cwd = process.cwd()) {
 		}
 	}
 
-	write(join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
+	if (config.package.metadata('package.json')) {
+		write(join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
+	}
 
 	for (const file of files) {
 		await process_file(config, file);
@@ -69,6 +71,7 @@ export async function build(config, cwd = process.cwd()) {
 	for (const pathname of whitelist) {
 		const full_path = join(cwd, pathname);
 		if (fs.lstatSync(full_path).isDirectory()) continue; // just to be sure
+		if (!config.package.metadata(pathname)) continue;
 
 		const package_path = join(dir, pathname);
 		if (!fs.existsSync(package_path)) fs.copyFileSync(full_path, package_path);
@@ -154,7 +157,7 @@ export async function watch(config, cwd = process.cwd()) {
 				}
 			}
 
-			if (should_update_pkg) {
+			if (should_update_pkg && config.package.metadata('package.json')) {
 				const pkg = generate_pkg(cwd, files);
 				write(join(dir, 'package.json'), JSON.stringify(pkg, null, 2));
 				console.log('Updated package.json');
