@@ -212,8 +212,9 @@ Options related to [creating a package](/docs/packaging).
 - `emitTypes` - by default, `svelte-package` will automatically generate types for your package in the form of `.d.ts` files. While generating types is configurable, we believe it is best for the ecosystem quality to generate types, always. Please make sure you have a good reason when setting it to `false` (for example when you want to provide handwritten type definitions instead)
 - `exports` - a function with the type of `(filepath: string) => boolean`. When `true`, the filepath will be included in the `exports` field of the `package.json`. Any existing values in the `package.json` source will be merged with values from the original `exports` field taking precedence
 - `files` - a function with the type of `(filepath: string) => boolean`. When `true`, the file will be processed and copied over to the final output folder, specified in `dir`
+- `metadata` - a function with the type of `(filepath: string) => boolean`. By default, `svelte-package` will copy metadata files like `package.json`, `README.md`, and changelogs from the project root to the output directory. When `false`, this behavior will be disabled for the file. Please make sure you have a good reason when setting it to `false` (for example when you want to manage your project structure manually).
 
-For advanced `filepath` matching, you can use `exports` and `files` options in conjunction with a globbing library:
+For advanced `filepath` matching, you can use `exports`, `files` and `metadata` options in conjunction with a globbing library:
 
 ```js
 // @filename: ambient.d.ts
